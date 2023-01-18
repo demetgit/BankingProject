@@ -1,0 +1,15 @@
+p{
+    color:aqua;
+    background-color: red;
+    font-size: xx-large;
+    font-family: monospace;
+}
+.mainDiv{
+    color: black;
+    background-color: yellow;
+    font-style: oblique;
+    font-size: larger;
+    border: 2px;
+    -moz-force-broken-image-icon: initial;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
