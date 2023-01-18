@@ -34,6 +34,23 @@
             <lightning-button variant="brand" label="Fetch Scheme" title="Fetch Scheme" onclick={fetchSchemeClick}
                 class="slds-m-left_x-small"></lightning-button>
         </div>
+
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+            <lightning-combobox name="fetch-scheme" label="Scheme Options" options={listScheme}
+                onchange={schemeChange} required class="classForSaveButton">
+            </lightning-combobox>
+
     </div>
+
+    <div class="slds-col slds-size_4-of-12 slds-p-around_small"></div>
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+        <lightning-input type="number"  label="Interest Rate"  
+        required disabled
+        value={selectedIntRate}
+            class="classForSaveButton" formatter="currency" step="1" ></lightning-input>
+    </div>
+
+</div>
+
 
 </template>

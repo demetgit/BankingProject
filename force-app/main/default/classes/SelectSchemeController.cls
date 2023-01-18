@@ -1,5 +1,18 @@
-@AuraEnabled (Cacheable=true)
-public static List<Interest_Scheme__c> fetchInterestScheme (String fdId, String cusType, String depType, Integer tnrMonth, Integer tnrDay, Integer fdAmount){
+public without sharing class SelectSchemeController{
+
+        @AuraEnabled (Cacheable=true)
+        public static fetchCusType(String fdId){
+        FD_Details__c fdRec = [SELECT Id,Name,Customer_Type__c 
+                                                FROM FD_Details__c
+                                                WHERE Id=:fdId];
+
+                    return fdRec;
+        }
+
+
+
+
+public static List<Interest_Scheme__c> fetchInScheme (String fdId, String cusType, String depType, Integer tnrMonth, Integer tnrDay, Integer fdAmount){
     
     List<Interest_Scheme__c> listInt = [SELECT Id, Name, Interest_Rate__c 
                                         FROM Interest_Scheme__c
@@ -15,4 +28,5 @@ public static List<Interest_Scheme__c> fetchInterestScheme (String fdId, String 
     
     
     return listInt;
+}
 }

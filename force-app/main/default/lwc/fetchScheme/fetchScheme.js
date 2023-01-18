@@ -1,5 +1,6 @@
 import { LightningElement, wire, api } from 'lwc';
-import fetchCusTypeLocal from '@salesforce/apex/FdDetailsService.fetchCusType';
+import fetchCusTypeLocal from '@salesforce/apex/SelectSchemeController.fetchCusType';
+import InterestSchemeFetch from '@salesforce/apex/SelectSchemeController.fetchInScheme';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import FdDetailLocal from '@salesforce/schema/FD_Details__c';
 import depTypeLocal from '@salesforce/schema/FD_Details__c.Deposit_Type__c';
@@ -18,6 +19,7 @@ export default class SelectScheme extends LightningElement {
     selectedMonth = ''
     selectedDay = ''
     FdAmount = 0
+    listScheme= []
 
     // Customer Type Combobox
     @wire(fetchCusTypeLocal, {
@@ -123,6 +125,31 @@ export default class SelectScheme extends LightningElement {
         })
         if (isValid) {
             // call Apex Method to Fetch Interest Scheme Data
+            fetchInterestScheme ({
+                fdId:this.recordId, 
+                 cusType:this.selectedCusType, 
+                  depType:this.selectedDepType, 
+                  tnrMonth:this.selectedMonth,
+                tnrDay:this.selectedDay, 
+                 fdAmount:fdAmount
+            }).then(result =>{
+
+                var lstSchm=[]
+                if(result){
+                    for(var i=0; i<result.length; i++){
+                            var tempObj={}
+                            tempObj.label= result [i].Name
+                            tempObj.label= result [i].id
+                            tempObj.label= result [i].Interest_Rate__c
+                            lstSchm.push(tempObj)
+                    }
+                }
+                this.listScheme= lstSchm
+            }).catch(error => {
+                console.log('scheme datasi ceklrken hata olustu.hata mesaji:' + error.message)
+            })
+
+//bu bzm yaptgmz impretavively call apex, butona basnca calısır
         }
 
     }
