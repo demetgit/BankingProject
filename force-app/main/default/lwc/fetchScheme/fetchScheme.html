@@ -1,0 +1,39 @@
+<template>
+    <div class="slds-grid slds-wrap slds-p-around_small">
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+            <lightning-combobox name="customer_type" label="Customer Type" options={customerOptions}
+                onchange={cusTypeChange} required class="clsFrmFetchSchm">
+            </lightning-combobox>
+        </div>
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+            <lightning-combobox name="deposit_type" label="Deposit Type" options={depTypeOptions}
+                onchange={depTypeChange} required class="clsFrmFetchSchm">
+            </lightning-combobox>
+        </div>
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+            <lightning-combobox name="payFreq_type" label="Payout Frequency Type" options={payFreqOptions}
+                onchange={payoutFreqChange} required class="clsFrmFetchSchm">
+            </lightning-combobox>
+        </div>
+
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+            <lightning-combobox name="tenor_in_month" label="Tenor in Month" options={tenorMonthOptions}
+                onchange={tenorMonthChange} required class="clsFrmFetchSchm">
+            </lightning-combobox>
+        </div>
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+            <lightning-combobox name="tenor_in_day" label="Tenor in Day" options={tenorDayOptions}
+                onchange={tenorDayChange} required class="clsFrmFetchSchm">
+            </lightning-combobox>
+        </div>
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+            <lightning-input type="number" name="fdAmount" label="FD Amount" placeholder="FD Amount giriniz" required
+                class="clsFrmFetchSchm" formatter="currency" step="1" onchange={fdAmountChange}></lightning-input>
+        </div>
+        <div class="slds-col slds-size_4-of-12 slds-p-around_small slds-align_absolute-center">
+            <lightning-button variant="brand" label="Fetch Scheme" title="Fetch Scheme" onclick={fetchSchemeClick}
+                class="slds-m-left_x-small"></lightning-button>
+        </div>
+    </div>
+
+</template>
