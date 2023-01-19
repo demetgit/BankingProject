@@ -1,10 +1,12 @@
 import { LightningElement, wire, api } from 'lwc';
-import fetchCusTypeLocal from '@salesforce/apex/SelectSchemeController.fetchCusType';
-import InterestSchemeFetch from '@salesforce/apex/SelectSchemeController.fetchInScheme';
+import fetchCusTypeLocal from '@salesforce/apex/FdDetailsService.fetchCusType';
+import fetchInterestScheme from '@salesforce/apex/FdDetailsService.fetchInterestScheme';
+import updateFD from '@salesforce/apex/FdDetailsService.updateFD';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import FdDetailLocal from '@salesforce/schema/FD_Details__c';
 import depTypeLocal from '@salesforce/schema/FD_Details__c.Deposit_Type__c';
 import payFreqLocal from '@salesforce/schema/FD_Details__c.Payout_Frequency__c';
+import {ShowToastEvent} from 'lightning/platformShowToastEvent'
 
 export default class SelectScheme extends LightningElement {
 
@@ -19,7 +21,9 @@ export default class SelectScheme extends LightningElement {
     selectedMonth = ''
     selectedDay = ''
     FdAmount = 0
-    listScheme= []
+    listScheme = []
+    selectedIntRate
+    selectedIntSchmId
 
     // Customer Type Combobox
     @wire(fetchCusTypeLocal, {
@@ -30,7 +34,7 @@ export default class SelectScheme extends LightningElement {
             options.push({ label: data.Customer_Type__c, value: data.Customer_Type__c })
             this.customerOptions = options
         } else if (error) {
-            console.log('Customer Type bilgisi sorgulanirken hata alindi');
+            console.log('Customer Type bilgisi sorgulanirken hata alndi');
         }
     }
 
@@ -73,7 +77,7 @@ export default class SelectScheme extends LightningElement {
             this.payFreqData = data
         }
         else if(error) {
-            console.log('Payout Frequency bilgisi sorgulanirken hata alidi');
+            console.log('Payout Frequency bilgisi sorgulanrken hata alindi');
         }
     }
     
@@ -125,33 +129,91 @@ export default class SelectScheme extends LightningElement {
         })
         if (isValid) {
             // call Apex Method to Fetch Interest Scheme Data
-            fetchInterestScheme ({
-                fdId:this.recordId, 
-                 cusType:this.selectedCusType, 
-                  depType:this.selectedDepType, 
-                  tnrMonth:this.selectedMonth,
-                tnrDay:this.selectedDay, 
-                 fdAmount:fdAmount
-            }).then(result =>{
-
-                var lstSchm=[]
-                if(result){
-                    for(var i=0; i<result.length; i++){
-                            var tempObj={}
-                            tempObj.label= result [i].Name
-                            tempObj.label= result [i].id
-                            tempObj.label= result [i].Interest_Rate__c
-                            lstSchm.push(tempObj)
+            fetchInterestScheme({
+                fdId: this.recordId,
+                cusType: this.selectedCusType,
+                depType: this.selectedDepType,
+                tnrMonth: this.selectedMonth,
+                tnrDay: this.selectedDay,
+                fdAmount: this.FdAmount
+            }).then(result => {
+                var lstSchm = []
+                if (result) { 
+                    for (var i = 0; i < result.length; i++){
+                        var tempObj = {}
+                        tempObj.label = result[i].Name
+                        tempObj.value = result[i].Id
+                        tempObj.interestRate = result[i].Interest_Rate__c
+                        lstSchm.push(tempObj)
                     }
                 }
-                this.listScheme= lstSchm
+                this.listScheme = lstSchm
             }).catch(error => {
-                console.log('scheme datasi ceklrken hata olustu.hata mesaji:' + error.message)
+                console.log('Interest Scheme sorgulanirken hata oluştu: hata mesaji: ' + error.message)
             })
-
-//bu bzm yaptgmz impretavively call apex, butona basnca calısır
         }
 
+    }
+
+    schmChange(event) {
+        var schemeRecId = event.detail.value
+        for (var i = 0; i < this.listScheme.length; i++){
+            if (schemeRecId == this.listScheme[i].value) {
+                this.selectedIntRate = this.listScheme[i].interestRate
+                this.selectedIntSchmId = schemeRecId
+                console.log('Selected Int rate: ' + this.selectedIntRate)
+            }
+        }
+    }
+
+    saveClick() {
+        // Validate inputs
+        let isValid = true
+        let inputFields = this.template.querySelectorAll('.clsFrmFetchSchm');
+        inputFields.forEach(inputField => {
+            if (!inputField.checkValidity()) {
+                inputField.reportValidity()
+                isValid = false
+            }
+        }) 
+
+        inputFields = this.template.querySelectorAll('.classForSaveButton');
+        inputFields.forEach(inputField => {
+            if (!inputField.checkValidity()) {
+                inputField.reportValidity()
+                isValid = false
+            }
+        }) 
+
+        if (isValid) {
+            // imperatively call Apex Method to Fetch Interest Scheme Data
+            console.log('fd Id= ' + this.recordId);
+            updateFD({
+                fdId: this.recordId,
+                depType: this.selectedDepType,
+                tnrMonth: this.selectedMonth,
+                tnrDay: this.selectedDay,
+                fdAmount: this.FdAmount,
+                schmId: this.selectedIntSchmId, 
+                intRate: this.selectedIntRate,
+                payFreq: this.selectedPayFreq
+            }).then(result => {
+                const event = new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Kaydetme işlemi başarili',
+                    variant: 'Success'
+                });
+                this.dispatchEvent(event);
+    
+            }).catch(error => {
+                const event = new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Kaydetme işlemi esnasında hata oluştu: hata mesaji:' + JSON.stringify(error),
+                    variant: 'Error'
+                });
+                this.dispatchEvent(event);
+            })
+        }
     }
 
 }
