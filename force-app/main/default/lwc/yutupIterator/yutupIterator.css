@@ -1,0 +1,14 @@
+.myDv{
+background-color: blueviolet;
+font-family: Verdana, Geneva, Tahoma, sans-serif;
+font-size: large;
+margin:10px;
+border: coral;
+border-radius: 5px;
+border-style: inset;
+
+}
+.score{
+    padding-left: 10px;
+    color: aqua;
+}
