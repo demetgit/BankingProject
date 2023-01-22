@@ -1,0 +1,23 @@
+<template>
+    
+<lightning-record-edit-form object-api-name="Account" onsuccess={successHandler}>
+
+    <lightning-input-field field-name="Name"></lightning-input-field>
+    <lightning-input-field field-name="Site"></lightning-input-field>
+    <lightning-input-field field-name="Rating"></lightning-input-field>
+    <lightning-input-field field-name="Phone"></lightning-input-field>
+    <lightning-input-field field-name="Active"></lightning-input-field>
+    <lightning-input-field field-name="AnnualRevenue"></lightning-input-field>
+    
+<lightning-button type="submit" label="create acc"></lightning-button>
+
+<div style="color: blueviolet;">{successMessage}</div>
+
+
+
+
+</lightning-record-edit-form>
+
+
+
+</template>
