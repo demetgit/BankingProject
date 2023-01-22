@@ -1,0 +1,17 @@
+.mainDiv{
+    background-color: aqua;
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid gold;
+    border-radius: 10px;
+}
+
+.myCmp{
+    color:brown;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+.myCmp2{
+    color: chocolate;
+    font-weight: bold;
+}

@@ -1,8 +1,21 @@
 <template>
     
-<div>name: {name}</div>
-<div>title: {title}</div>
+<!--1.denemeee <div>name: {name}</div>
+<div>title: {title}</div> -->
+
+<lightning-layout>
+<div>
+        <ul>
+            <template for:each={contacts} for:item="singlecon">
+                    <li key={singlecon.Id}>
+                    <p>name: {singlecon.Name}</p>
+                    <p> title: {singlecon.title}</p>
+                </li>
+            </template>
+        </ul>
+</div>
 
 
+</lightning-layout>
 
 </template>
