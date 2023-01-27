@@ -1,0 +1,35 @@
+<template>
+    <div class="slds-m-around_medium">
+        <lightning-card title="New Contact">
+            <form>
+                <lightning-layout>
+                    <lightning-layout-item size="6">
+                        <lightning-input name="firstName" label="First Name" onchange={handleChange} value={contact.firstName} required></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6">
+                        <lightning-input name="lastName" label="Last Name" onchange={handleChange} value={contact.lastName} required></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout>
+                    <lightning-layout-item size="6">
+                        <lightning-input type="email" name="email" label="Email" onchange={handleChange} value={contact.email}></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6">
+                        <lightning-input type="tel" name="phone" label="Phone" onchange={handleChange} value={contact.phone}></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout>
+                    <lightning-layout-item size="6">
+                        <lightning-input name="accountId" label="Account ID" onchange={handleChange} value={contact.accountId} required></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout>
+                    <lightning-layout-item>
+                        <lightning-button label="Save" variant="brand" onclick={handleSave}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </form>
+        </lightning-card>
+    </div>
+</template>
