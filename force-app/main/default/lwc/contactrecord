@@ -1,0 +1,87 @@
+<template>
+    <div class="slds-m-around_medium">
+        <lightning-card title="New Contact">
+            <form>
+                <lightning-layout>
+                    <lightning-layout-item size="6">
+                        <lightning-input name="firstName" label="First Name" onchange={handleChange} value={contact.firstName} required></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6">
+                        <lightning-input name="lastName" label="Last Name" onchange={handleChange} value={contact.lastName} required></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout>
+                    <lightning-layout-item size="6">
+                        <lightning-input type="email" name="email" label="Email" onchange={handleChange} value={contact.email}></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6">
+                        <lightning-input type="tel" name="phone" label="Phone" onchange={handleChange} value={contact.phone}></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout>
+                    <lightning-layout-item size="6">
+                        <lightning-input name="accountId" label="Account ID" onchange={handleChange} value={contact.accountId} required></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout>
+                    <lightning-layout-item>
+                        <lightning-button label="Save" variant="brand" onclick={handleSave}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </form>
+        </lightning-card>
+    </div>
+</template>
+
+
+
+///////////////////////////////js kodu------------------------------------
+import { LightningElement, track } from 'lwc';
+import { createRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import CONTACT_OBJECT from '@salesforce/schema/Contact';
+
+export default class ContactForm extends LightningElement {
+    @track contact = {};
+    @track isLoading = false;
+
+    handleChange(event) {
+        this.contact[event.target.name] = event.target.value;
+    }
+
+    handleSave() {
+        this.isLoading = true;
+        const fields = {};
+        fields.FirstName = this.contact.firstName;
+        fields.LastName = this.contact.lastName;
+        fields.Email = this.contact.email;
+        fields.Phone = this.contact.phone;
+        fields.AccountId = this.contact.accountId;
+
+        const recordInput = { apiName: CONTACT_OBJECT.objectApiName, fields };
+
+        createRecord(recordInput)
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Contact created',
+                        variant: 'success',
+                    }),
+                );
+                this.contact = {};
+                this.isLoading = false;
+            })
+            .catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error creating contact',
+                        message: error.body.message,
+                        variant: 'error',
+                    }),
+                );
+                this.isLoading = false;
+            });
+    }
+}
